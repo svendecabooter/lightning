@@ -18,7 +18,7 @@ Feature: Panelizer Wizard
     When I visit "/foobar"
     And I place the "views_block:who_s_online-who_s_online_block" block from the "Lists (Views)" category
     # Click IPE Save
-    And I save the layout
+    And I save the layout as a custom override
     And I click "Edit draft"
     And I press "Save"
     Then I should see a "views_block:who_s_online-who_s_online_block" block
@@ -67,7 +67,7 @@ Feature: Panelizer Wizard
     When I visit "/foobar"
     And I place the "views_block:who_s_online-who_s_online_block" block from the "Lists (Views)" category
     # Click IPE Save
-    And I save the layout as default
+    And I save the layout as the default
     And I visit "/admin/structure/panelizer/edit/node__landing_page__full__default/content"
     Then the "Who's online" block should be in the middle region
     And I remove the "Who's online" block from the "middle" panelizer region
