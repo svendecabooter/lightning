@@ -5,10 +5,10 @@
  * Contains \EntitySubContext.
  */
 
+use Acquia\LightningExtension\DrupalApiTrait;
 use Behat\Gherkin\Node\TableNode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
-use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
 use Drupal\DrupalExtension\Hook\Scope\EntityScope;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -17,7 +17,9 @@ use Drupal\user\Entity\User;
 /**
  * Subcontext for creating and cleaning up entities of any type.
  */
-class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class EntitySubContext extends DrupalSubContextBase {
+
+  use DrupalApiTrait;
 
   /**
    * Entities created during the scenario, organized by type.
@@ -51,18 +53,6 @@ class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextI
   }
 
   /**
-   * Ensures the Drupal driver is bootstrapped.
-   *
-   * @throws \RuntimeException
-   *   If the Drupal driver is not bootstrapped.
-   */
-  protected function ensureBootstrap() {
-    if ($this->getDriver()->isBootstrapped() == FALSE) {
-      throw new \RuntimeException('Drupal is not bootstrapped.');
-    }
-  }
-
-  /**
    * Creates a set of entities of a given type.
    *
    * @param string $entity_type
@@ -73,11 +63,11 @@ class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextI
    * @Given :entity_type entities:
    */
   public function createEntities($entity_type, TableNode $table) {
-    $this->ensureBootstrap();
+    $this->assertDrupalApi();
 
     foreach ($table as $row) {
       if ($entity_type == 'media' && empty($row['uid'])) {
-        $row['uid'] = $this->uid();
+        $row['uid'] = $this->getCurrentUid();
       }
 
       $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->create($row);
@@ -158,25 +148,6 @@ class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextI
   }
 
   /**
-   * Returns the uid of the currently logged-in user from the DrupalContext.
-   *
-   * Under certain circumstances (which I don't understand yet),
-   * \Drupal::currentUser() is anonymous even after logging in! If that's the
-   * case, we can pull the uid right out of the DrupalContext using reflection.
-   * This is a naughty hack and should eventually be removed.
-   *
-   * @return int
-   *   The ID of the logged-in user, according to the Drupal context.
-   */
-  protected function uid() {
-    $context = $this->getContext('Drupal\DrupalExtension\Context\DrupalContext');
-
-    $property = (new \ReflectionObject($context))->getProperty('user');
-    $property->setAccessible(TRUE);
-    return $property->getValue($context)->uid;
-  }
-
-  /**
    * Visits a random entity of a specific type and bundle.
    *
    * @param string $entity_type
@@ -187,7 +158,7 @@ class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextI
    * @When I visit a :entity_type entity of type :bundle
    */
   public function visitEntity($entity_type, $bundle) {
-    $this->ensureBootstrap();
+    $this->assertDrupalApi();
 
     $bundle_key = \Drupal::entityTypeManager()
       ->getDefinition($entity_type)
@@ -247,7 +218,7 @@ class EntitySubContext extends DrupalSubContextBase implements DrupalSubContextI
    * @When I queue the latest :entity_type entity for deletion
    */
   public function trackNewest($entity_type, $sort_field = 'created', $limit = 1) {
-    $this->ensureBootstrap();
+    $this->assertDrupalApi();
 
     $entities = \Drupal::entityQuery($entity_type)
       ->sort($sort_field, 'DESC')

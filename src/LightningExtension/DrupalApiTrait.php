@@ -3,11 +3,46 @@
 namespace Acquia\LightningExtension;
 
 use Drupal\Driver\DrupalDriver;
+use Drupal\DrupalExtension\Context\DrupalContext;
 
 /**
  * Contains helper methods for contexts which use the Drupal API natively.
  */
 trait DrupalApiTrait {
+
+  /**
+   * Returns the current user ID.
+   *
+   * This will try to use reflection to pull the current user ID out of
+   * DrupalContext, if it's available; if it's not, this will return a
+   * default value if one was passed. Otherwise, it will throw an exception.
+   *
+   * @param int $default
+   *   (optional) The default user ID to return if DrupalContext is unavailable.
+   *
+   * @return int
+   *   The current user ID.
+   *
+   * @throws \LogicException
+   *   If DrupalContext is not available and no default was given.
+   */
+  protected function getCurrentUid($default = NULL) {
+    $context = $this->getContext(DrupalContext::class);
+
+    if ($context) {
+      $reflector = new \ReflectionObject($context);
+      $property = $reflector->getProperty('user');
+      $property->setAccessible(TRUE);
+
+      return $property->getValue($context)->uid;
+    }
+    elseif (isset($default)) {
+      return $default;
+    }
+    else {
+      throw new \LogicException('Cannot get current user ID because DrupalContext is unavailable.');
+    }
+  }
 
   /**
    * Returns the current route name, as determined by the current URL path.
