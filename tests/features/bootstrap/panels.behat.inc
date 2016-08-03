@@ -5,29 +5,25 @@
  * Contains \PanelsSubContext.
  */
 
+use Acquia\LightningExtension\ElementManipulationTrait;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
-use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
+use Drupal\DrupalExtension\Context\MinkContext;
 
 /**
  * Contains step definitions for working with Panels and panelized pages.
  */
-class PanelsSubContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class PanelsSubContext extends DrupalSubContextBase {
+
+  use ElementManipulationTrait;
 
   /**
    * The Mink context.
    *
-   * @var \Drupal\DrupalExtension\Context\MinkContext
+   * @var MinkContext
    */
   protected $minkContext;
-
-  /**
-   * The Lightning subcontext.
-   *
-   * @var \LightningSubContext
-   */
-  protected $lightning;
 
   /**
    * Pre-scenario hook.
@@ -35,8 +31,7 @@ class PanelsSubContext extends DrupalSubContextBase implements DrupalSubContextI
    * @BeforeScenario
    */
   public function gatherContexts() {
-    $this->minkContext = $this->getContext('\Drupal\DrupalExtension\Context\MinkContext');
-    $this->lightning = $this->getContext('LightningSubContext');
+    $this->minkContext = $this->getContext(MinkContext::class);
   }
 
   /**
@@ -88,16 +83,16 @@ class PanelsSubContext extends DrupalSubContextBase implements DrupalSubContextI
    * @When I place the :plugin_id block from the :category category
    */
   public function placeBlock($plugin_id, $category) {
-    $this->lightning->clickElementBySelector('a[title = "Manage Content"]');
+    $this->clickSelector('a[title = "Manage Content"]');
     $this->minkContext->iWaitForAjaxToFinish();
 
-    $this->lightning->clickElementBySelector('a[data-category = "' . $category . '"]');
+    $this->clickSelector('a[data-category = "' . $category . '"]');
     $this->minkContext->iWaitForAjaxToFinish();
 
-    $this->lightning->clickElementBySelector('a[data-plugin-id = "' . $plugin_id . '"]');
+    $this->clickSelector('a[data-plugin-id = "' . $plugin_id . '"]');
     $this->minkContext->iWaitForAjaxToFinish();
 
-    $this->lightning->clickElementBySelector('[value = "Add"]');
+    $this->clickSelector('[value = "Add"]');
     $this->minkContext->iWaitForAjaxToFinish();
   }
 
@@ -214,32 +209,6 @@ class PanelsSubContext extends DrupalSubContextBase implements DrupalSubContextI
         return $row;
       }
     }
-  }
-
-  /**
-   * Saves the current Panels layout as a custom layout.
-   *
-   * @When I save the layout
-   */
-  public function saveCustomLayout() {
-    $this->lightning->clickElementBySelector('a[title = "Save"]');
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->lightning->clickElementBySelector('a.panelizer-ipe-save-custom');
-    $this->minkContext->iWaitForAjaxToFinish();
-  }
-
-  /**
-   * Saves the current Panels layout as a default layout.
-   *
-   * @When I save the layout as default
-   */
-  public function saveDefaultLayout() {
-    $this->lightning->clickElementBySelector('a[title = "Save"]');
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->lightning->clickElementBySelector('a.panelizer-ipe-save-default');
-    $this->minkContext->iWaitForAjaxToFinish();
   }
 
   /**

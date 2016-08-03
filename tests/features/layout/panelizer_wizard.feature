@@ -85,7 +85,7 @@ Feature: Panelizer Wizard
       | Foobar | /foobar | draft            |
     When I visit "/foobar"
     And I place the "views_block:who_s_online-who_s_online_block" block from the "Lists (Views)" category
-    And I save the layout
+    And I save the layout as a custom override
     And I click "Edit draft"
     Then the "Full content" field should be disabled
 

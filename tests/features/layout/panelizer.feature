@@ -20,7 +20,7 @@ Feature: Panelizer
     When I visit "/foobar"
     And I place the "views_block:who_s_online-who_s_online_block" block from the "Lists (Views)" category
     # Click IPE Save
-    And I save the layout
+    And I save the layout as a custom override
     And I visit "/foobar"
     Then I should see a "views_block:who_s_online-who_s_online_block" block
 
@@ -35,7 +35,7 @@ Feature: Panelizer
       | basic | Here be dragons... | RAWWWR! | test--here-be-dragons |
     When I visit "/foobar"
     And I place the "block_content:test--here-be-dragons" block from the "Custom" category
-    And I save the layout
+    And I save the layout as a custom override
     And I reload the page
     Then I should see a "block_content:test--here-be-dragons" block with a "quickedit" contextual link
 
