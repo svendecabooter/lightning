@@ -5,18 +5,26 @@
  * Contains \MediaLibrarySubContext.
  */
 
+use Acquia\LightningExtension\Context\AwaitContext;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
-use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
+use Drupal\DrupalExtension\Context\MinkContext;
 
 /**
  * Contains step definitions for testing the CKEditor media widget.
  */
-class MediaLibrarySubContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class MediaLibrarySubContext extends DrupalSubContextBase {
+
+  /**
+   * The Await context.
+   *
+   * @var AwaitContext
+   */
+  protected $await;
 
   /**
    * The Mink context.
    *
-   * @var \Drupal\DrupalExtension\Context\MinkContext
+   * @var MinkContext
    */
   protected $minkContext;
 
@@ -26,30 +34,8 @@ class MediaLibrarySubContext extends DrupalSubContextBase implements DrupalSubCo
    * @BeforeScenario
    */
   public function gatherContexts() {
-    $this->minkContext = $this->getContext('\Drupal\DrupalExtension\Context\MinkContext');
-  }
-
-  /**
-   * Waits for a JavaScript condition to become truthy.
-   *
-   * @param string $expression
-   *   The JavaScript expression to wait for.
-   */
-  protected function awaitExpression($expression) {
-    $this->getSession()->wait(10000, $expression);
-  }
-
-  /**
-   * Waits for an element to exist.
-   *
-   * @param string $selector
-   *   The element's CSS selector.
-   * @param int $timeout
-   *   How many seconds to wait before timing out.
-   */
-  protected function awaitElement($selector, $timeout = 10) {
-    $this->getSession()
-      ->wait($timeout * 1000, 'document.querySelector("' . addslashes($selector) . '")');
+    $this->await = $this->getContext(AwaitContext::class);
+    $this->minkContext = $this->getContext(MinkContext::class);
   }
 
   /**
@@ -67,7 +53,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase implements DrupalSubCo
 
     $this->minkContext->iWaitForAjaxToFinish();
     $frame = 'entity_browser_iframe_' . $button;
-    $this->awaitElement('iframe[name="' . $frame . '"]', 30);
+    $this->await->awaitElement('iframe[name="' . $frame . '"]', 30);
     $this->getSession()->switchToIFrame($frame);
   }
 
@@ -100,9 +86,9 @@ class MediaLibrarySubContext extends DrupalSubContextBase implements DrupalSubCo
     $session = $this->getSession();
     $session->switchToWindow();
     $session->executeScript('window.frames.entity_browser_iframe_media_browser.document.forms[0].elements.op.click()');
-    $this->awaitExpression('!window.frames.entity_browser_iframe_media_browser');
+    $this->await->awaitExpression('!window.frames.entity_browser_iframe_media_browser');
     $this->minkContext->iWaitForAjaxToFinish();
-    $this->awaitElement('form.entity-embed-dialog');
+    $this->await->awaitElement('form.entity-embed-dialog');
     $session->executeScript('document.querySelector("form.entity-embed-dialog").elements.op[1].click()');
     $this->minkContext->iWaitForAjaxToFinish();
   }
@@ -112,7 +98,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase implements DrupalSubCo
    */
   protected function awaitEntityForm() {
     $this->minkContext->iWaitForAjaxToFinish();
-    $this->awaitExpression('document.getElementById("ief-target").textContent.length');
+    $this->await->awaitExpression('document.getElementById("ief-target").textContent.length');
   }
 
   /**

@@ -67,7 +67,7 @@ Feature: Media browser
     And I click "Add field"
     And I select "Image" from "new_storage_type"
     And I enter "Hero Image" for "Label"
-    And I wait 1 seconds
+    And I wait 1 second
     And I press "Save and continue"
     And I press "Save field settings"
     And I press "Save settings"

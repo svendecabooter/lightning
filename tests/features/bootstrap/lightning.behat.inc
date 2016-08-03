@@ -228,18 +228,6 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
   }
 
   /**
-   * Waits a while, for debugging.
-   *
-   * @param int $seconds
-   *   How long to wait.
-   *
-   * @When I wait :seconds seconds
-   */
-  public function wait($seconds) {
-    sleep($seconds);
-  }
-
-  /**
    * Maximizes the window (probably for debugging purposes).
    *
    * @When I maximize the window
