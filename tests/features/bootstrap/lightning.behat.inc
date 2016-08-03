@@ -9,7 +9,6 @@ use Acquia\LightningExtension\ElementManipulationTrait;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ExpectationException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
 
@@ -292,22 +291,6 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
    */
   public function assertFieldExists($locator) {
     $this->assertSession()->fieldExists($locator);
-  }
-
-  /**
-   * Asserts that we are visiting a media entity.
-   *
-   * @Then I should be visiting a media entity
-   */
-  public function assertVisitingMediaEntity() {
-    $this->assertSession()->addressMatches('/\/media\/[0-9]+$/');
-
-    try {
-      $this->assertSession()->statusCodeEquals(200);
-    }
-    catch (UnsupportedDriverActionException $e) {
-      // This isn't a critically important assertion, so don't worry about it.
-    }
   }
 
   /**

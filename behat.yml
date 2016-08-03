@@ -5,6 +5,7 @@ default:
         - %paths.base%/tests/features
       contexts:
         - Acquia\LightningExtension\Context\AwaitContext
+        - Acquia\LightningExtension\Context\EntityContext
         - Acquia\LightningExtension\Context\PanelizerContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
