@@ -6,6 +6,7 @@ default:
       contexts:
         - Acquia\LightningExtension\Context\AwaitContext
         - Acquia\LightningExtension\Context\EntityContext
+        - Acquia\LightningExtension\Context\NodeContext
         - Acquia\LightningExtension\Context\PanelizerContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext

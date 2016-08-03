@@ -24,7 +24,7 @@ class EntityContext extends DrupalSubContextBase {
    *
    * @Then I should be visiting a(n) :entity_type entity
    */
-  public function assertAtCanonicalEntityRoute($entity_type) {
+  public function assertAtCanonicalRoute($entity_type) {
     $this->assertDrupalApi();
 
     $expected = 'entity.' . $entity_type . '.canonical';
