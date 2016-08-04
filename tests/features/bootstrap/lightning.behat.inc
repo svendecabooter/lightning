@@ -214,15 +214,6 @@ class LightningSubContext extends DrupalSubContextBase {
   }
 
   /**
-   * Maximizes the window (probably for debugging purposes).
-   *
-   * @When I maximize the window
-   */
-  public function maximize() {
-    $this->getSession()->getDriver()->maximizeWindow();
-  }
-
-  /**
    * Takes a screenshot for debugging purposes.
    *
    * @param string $filename
@@ -268,15 +259,6 @@ class LightningSubContext extends DrupalSubContextBase {
     else {
       throw new \Exception("No $entity_type labeled '$label' was found.");
     }
-  }
-
-  /**
-   * Asserts the presence of a live preview element.
-   *
-   * @Then I should see a preview
-   */
-  public function assertPreviewElement() {
-    $this->assertSession()->elementExists('css', '#edit-preview article');
   }
 
   /**

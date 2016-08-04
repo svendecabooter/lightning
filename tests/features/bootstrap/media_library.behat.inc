@@ -68,12 +68,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
    * @When I select item :n in the media browser
    */
   public function selectNthItem($n) {
-    sleep(5);
-    $row = floor($n / 4) + 1;
-    $column = ($n % $row) + 1;
-
-    $selector = '.view-media .row-' . $row . ' .col-' . $column;
-    $this->clickSelector($selector);
+    $this->clickViewItem('media', --$n);
   }
 
   /**

@@ -42,3 +42,27 @@ function lightning_core_node_type_delete(NodeTypeInterface $node_type) {
     }
   }
 }
+
+/**
+ * Preprocess function for all views.
+ *
+ * @param array $variables
+ *   Template variables.
+ */
+function lightning_core_preprocess_views_view(array &$variables) {
+  $variables['attributes']['data-view-id'] = $variables['view']->storage->id();
+}
+
+/**
+ * Preprocess function for all grid-style views.
+ *
+ * @param array $variables
+ *   Template variables.
+ */
+function lightning_core_preprocess_views_view_grid(array &$variables) {
+  foreach ($variables['items'] as &$item) {
+    foreach ($item['content'] as $i => &$column) {
+      $column['attributes']['data-row-index'] = $i;
+    }
+  }
+}

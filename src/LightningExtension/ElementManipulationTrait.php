@@ -40,4 +40,25 @@ trait ElementManipulationTrait {
     $element->click();
   }
 
+  /**
+   * Clicks an item in a view.
+   *
+   * This depends on two preprocess functions in lightning_core, which add
+   * the data-view-id and data-row-index attributes to views and their rows,
+   * respectively.
+   *
+   * @param string $view_id
+   *   The view ID.
+   * @param int $index
+   *   The zero-based index of the row to click.
+   */
+  protected function clickViewItem($view_id, $index) {
+    $selector = sprintf(
+      '[data-view-id="%s"] [data-row-index="%d"]',
+      $view_id,
+      $index
+    );
+    $this->clickSelector($selector);
+  }
+
 }
