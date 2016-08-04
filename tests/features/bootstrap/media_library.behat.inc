@@ -93,43 +93,4 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
     $this->minkContext->iWaitForAjaxToFinish();
   }
 
-  /**
-   * Waits for the inline entity form (containing required fields) to exist.
-   */
-  protected function awaitEntityForm() {
-    $this->minkContext->iWaitForAjaxToFinish();
-    $this->await->awaitExpression('document.getElementById("ief-target").textContent.length');
-  }
-
-  /**
-   * Uploads a file in the media browser.
-   *
-   * @param string $file
-   *   The path to the file, relative to the test files directory.
-   *
-   * @When I upload :file
-   */
-  public function upload($file) {
-    $this->minkContext->clickLink('Upload');
-    $this->minkContext->attachFileToField('File', $file);
-    $this->awaitEntityForm();
-  }
-
-  /**
-   * Enters an embed code in the media browser.
-   *
-   * @param string $code
-   *   The embed code.
-   *
-   * @When I enter embed code :code
-   */
-  public function embed($code) {
-    $this->minkContext->clickLink('Create Embed');
-    $this->minkContext->fillField('embed_code', $code);
-    // The change event, which triggers AJAX, is fired automatically after 600
-    // milliseconds.
-    sleep(1);
-    $this->awaitEntityForm();
-  }
-
 }
