@@ -6,6 +6,8 @@
  */
 
 use Acquia\LightningExtension\Context\AwaitContext;
+use Acquia\LightningExtension\Context\EntityBrowserFrameContext;
+use Acquia\LightningExtension\ElementManipulationTrait;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\MinkContext;
 
@@ -13,6 +15,8 @@ use Drupal\DrupalExtension\Context\MinkContext;
  * Contains step definitions for testing the CKEditor media widget.
  */
 class MediaLibrarySubContext extends DrupalSubContextBase {
+
+  use ElementManipulationTrait;
 
   /**
    * The Await context.
@@ -47,14 +51,13 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
    * @When I open the media browser
    */
   public function openMediaBrowser($button = 'media_browser') {
-    /** @var \CkEditorSubContext $ck_context */
-    $ck_context = $this->getContext('\CkEditorSubContext');
-    $ck_context->execute('editdrupalentity', NULL, ['id' => $button]);
+    $this->getContext('\CkEditorSubContext')
+      ->execute('editdrupalentity', NULL, ['id' => $button]);
 
     $this->minkContext->iWaitForAjaxToFinish();
-    $frame = 'entity_browser_iframe_' . $button;
-    $this->await->awaitElement('iframe[name="' . $frame . '"]', 30);
-    $this->getSession()->switchToIFrame($frame);
+
+    $this->getContext(EntityBrowserFrameContext::class)
+      ->enterEntityBrowser($button);
   }
 
   /**
@@ -71,9 +74,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
     $column = ($n % $row) + 1;
 
     $selector = '.view-media .row-' . $row . ' .col-' . $column;
-    /** @var \LightningSubContext $lightning */
-    $lightning = $this->getContext('\LightningSubContext');
-    $lightning->clickElementBySelector($selector);
+    $this->clickSelector($selector);
   }
 
   /**

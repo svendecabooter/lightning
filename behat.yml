@@ -5,6 +5,7 @@ default:
         - %paths.base%/tests/features
       contexts:
         - Acquia\LightningExtension\Context\AwaitContext
+        - Acquia\LightningExtension\Context\EntityBrowserFrameContext
         - Acquia\LightningExtension\Context\EntityContext
         - Acquia\LightningExtension\Context\NodeContext
         - Acquia\LightningExtension\Context\PanelizerContext
