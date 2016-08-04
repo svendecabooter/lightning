@@ -56,8 +56,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
 
     $this->minkContext->iWaitForAjaxToFinish();
 
-    $this->getContext(EntityBrowserFrameContext::class)
-      ->enterEntityBrowser($button);
+    $this->getContext(EntityBrowserFrameContext::class)->enter($button);
   }
 
   /**
@@ -85,9 +84,9 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
   public function completeSelection() {
     /** @var \Behat\Mink\Session $session */
     $session = $this->getSession();
-    $session->switchToWindow();
-    $session->executeScript('window.frames.entity_browser_iframe_media_browser.document.forms[0].elements.op.click()');
-    $this->await->awaitExpression('!window.frames.entity_browser_iframe_media_browser');
+
+    $this->getContext(EntityBrowserFrameContext::class)->complete();
+
     $this->minkContext->iWaitForAjaxToFinish();
     $this->await->awaitElement('form.entity-embed-dialog');
     $session->executeScript('document.querySelector("form.entity-embed-dialog").elements.op[1].click()');

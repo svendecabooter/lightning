@@ -2,12 +2,13 @@
 
 namespace Acquia\LightningExtension\Context;
 
+use Acquia\LightningExtension\EntityBrowserContextInterface;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 
 /**
  * Contains steps for working with entity browsers that display iFrames.
  */
-class EntityBrowserFrameContext extends DrupalSubContextBase {
+class EntityBrowserFrameContext extends DrupalSubContextBase implements EntityBrowserContextInterface {
 
   /**
    * The Await context.
@@ -55,8 +56,12 @@ class EntityBrowserFrameContext extends DrupalSubContextBase {
    *   The iFrame name.
    */
   protected function getFrame($id = NULL) {
-    $selector = $this->getSelector($id);
+    // The iFrame will only exist in the top-level window context.
+    $this->getSession()->switchToWindow();
 
+    // Wait for the iFrame element to exist, so that any initialization scripts
+    // have a chance to run.
+    $selector = $this->getSelector($id);
     $this->await->awaitElement($selector);
 
     return $this->assertSession()
@@ -65,19 +70,40 @@ class EntityBrowserFrameContext extends DrupalSubContextBase {
   }
 
   /**
-   * Switches to an entity browser iFrame context.
-   *
-   * @param string $id
-   *   (optional) The entity browser ID. If omitted, will switch the first
-   *   available entity browser iFrame.
+   * {@inheritdoc}
    *
    * @When I enter the entity browser
    * @When I enter the :id entity browser
    */
-  public function enterEntityBrowser($id = NULL) {
+  public function enter($id = NULL) {
     $frame = $this->getFrame($id);
     $this->getSession()->switchToIFrame($frame);
     $this->await->awaitElement('form.entity-browser-form');
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @When I submit the entity browser
+   * @When I submit the :id entity browser
+   */
+  public function submit($id = NULL) {
+    $this->getSession()
+      ->executeScript('window.frames["' . $this->getFrame($id) . '"].document.querySelector("form.entity-browser-form").op.click()');
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @When I complete the entity browser
+   * @When I complete the :id entity browser
+   */
+  public function complete($id = NULL) {
+    // Submitting the entity browser might close the frame, so get the frame
+    // first so that we can assert its disappearance.
+    $frame = $this->getFrame($id);
+    $this->submit($id);
+    $this->await->awaitExpression('typeof window.frames["' . $frame . '"] === "undefined"');
   }
 
 }
