@@ -10,12 +10,11 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
-use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
 
 /**
  * Sub context for Lightning step definitions.
  */
-class LightningSubContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class LightningSubContext extends DrupalSubContextBase {
 
   use ElementManipulationTrait;
 
@@ -197,8 +196,7 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
    * @When I scroll to the :selector element
    */
   public function scrollToElement($selector) {
-    $this->getSession()
-      ->executeScript('document.querySelector("' . addslashes($selector) . '").scrollIntoView()');
+    $this->scrollTo($selector);
   }
 
   /**
@@ -282,7 +280,7 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
   }
 
   /**
-   * Assets that a field exists.
+   * Asserts that a field exists.
    *
    * @param string $locator
    *   The field ID, name, label, or value.
@@ -303,15 +301,6 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
   }
 
   /**
-   * Switches out of an iframe into the main window.
-   *
-   * @When I switch to the window
-   */
-  public function switchToWindow() {
-    $this->getSession()->switchToWindow();
-  }
-
-  /**
    * Asserts that a given field has the disabled attribute.
    *
    * @param string $field
@@ -327,18 +316,6 @@ class LightningSubContext extends DrupalSubContextBase implements DrupalSubConte
     if (!$element->hasAttribute('disabled')) {
       throw new ExpectationException("Expected '{$field}' field to be disabled.", $this->getSession()->getDriver());
     }
-  }
-
-  /**
-   * Switches to an iframe.
-   *
-   * @param string $name
-   *   The iframe name.
-   *
-   * @When I switch to the :name frame
-   */
-  public function switchToFrame($name) {
-    $this->getSession()->switchToIFrame($name);
   }
 
 }

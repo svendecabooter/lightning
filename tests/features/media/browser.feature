@@ -97,8 +97,7 @@ Feature: Media browser
     And I attach the file "puppy.jpg" to "File"
     And I wait for AJAX to finish
     And I enter "Lookit the cutie pie!" for "Media name"
-    And I switch to the window
-    And I submit the entity browser
+    And I complete the entity browser
     And I wait 10 seconds
     And I wait for AJAX to finish
     Then I should not see a "table[drupal-data-selector='edit-image-current'] td.empty" element
