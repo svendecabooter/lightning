@@ -1,7 +1,11 @@
 <?php
 
+/**
+ * @file
+ * Workflow support for Lightning based on Workbench Moderation.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\node\NodeTypeInterface;
 use Drupal\user\Entity\Role;
 use Drupal\views\ViewExecutable;
@@ -27,8 +31,8 @@ function lightning_workflow_form_node_form_alter(array &$form, FormStateInterfac
     // DO NOT rejigger the buttons.
     array_shift($form['moderation_state']['widget'][0]['#process']);
 
-    // Show the basic 'Save' button, but hide the confusing 'Save as unpublished'
-    // and 'Save and publish' buttons.
+    // Show the basic 'Save' button, but hide the confusing
+    // 'Save as unpublished' and 'Save and publish' buttons.
     $form['actions']['submit']['#access'] = TRUE;
     $form['actions']['publish']['#access'] = $form['actions']['unpublish']['#access'] = FALSE;
     unset($form['actions']['publish']['#dropbutton'], $form['actions']['unpublish']['#dropbutton']);
@@ -88,6 +92,19 @@ function lightning_workflow_form_views_exposed_form_alter(array &$form, FormStat
         $form['moderation_state']['#options'][$state->id()] = $state->label();
       }
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Removes the publish and unpublish options from the admin/content form as they
+ * incompatible with WBM. See WBM README for more information.
+ */
+function lightning_workflow_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (preg_match('/^views_form_content_page_[0-9]+$/', $form_id)) {
+    unset($form['header']['node_bulk_form']['action']['#options']['node_publish_action']);
+    unset($form['header']['node_bulk_form']['action']['#options']['node_unpublish_action']);
   }
 }
 

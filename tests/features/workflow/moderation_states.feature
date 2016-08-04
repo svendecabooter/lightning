@@ -63,3 +63,9 @@ Feature: Workflow moderation states
     And I should not see "Graham Chapman"
     And I should not see "Terry Jones"
     And I should see "Eric Idle"
+
+  Scenario: Content view should not have publish/unpublish options
+    Given I am logged in as a user with the "access content overview" permission
+    When I visit "/admin/content"
+    Then I should not see "Publish content"
+    And I should not see "Unpublish content"
