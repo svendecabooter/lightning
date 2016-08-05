@@ -5,12 +5,18 @@
  * Contains \CkEditorSubContext.
  */
 
+use Acquia\LightningExtension\CkEditorApiTrait;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 
 /**
  * Contains steps for working with CKEditor instances.
  */
 class CkEditorSubContext extends DrupalSubContextBase {
+
+  use CkEditorApiTrait {
+    insert as doInsert;
+    execute as doExecute;
+  }
 
   /**
    * Asserts that a CKEditor instance exists.
@@ -26,8 +32,7 @@ class CkEditorSubContext extends DrupalSubContextBase {
    * @Then CKEditor :id should exist
    */
   public function assertEditorExists($id) {
-    $exists = $this->getSession()
-      ->evaluateScript("CKEDITOR.instances.hasOwnProperty('$id');");
+    $exists = in_array($id, $this->getInstances());
 
     if ($exists == FALSE) {
       throw new \Exception("CKEditor '$id' does not exist.");
@@ -46,10 +51,7 @@ class CkEditorSubContext extends DrupalSubContextBase {
    * @When I put :text into CKEditor :id
    */
   public function insert($text, $id = NULL) {
-    $id = $id ?: $this->getDefaultEditorId();
-
-    $this->getSession()
-      ->executeScript("CKEDITOR.instances['$id'].insertHtml('$text');");
+    $this->doInsert($id ?: $this->getDefaultEditorId(), $text);
   }
 
   /**
@@ -67,9 +69,9 @@ class CkEditorSubContext extends DrupalSubContextBase {
    * @Then CKEditor :id should contain :text
    */
   public function assertEditorContains($text, $id = NULL) {
-    $id = $id ?: $this->getDefaultEditorId();
+    $content = $this->getContents($id ?: $this->getDefaultEditorId());
 
-    if (strpos($this->getContent($id), $text) == FALSE) {
+    if (strpos($content, $text) == FALSE) {
       throw new \Exception("CKEditor $id did not contain '$text'.");
     }
   }
@@ -89,25 +91,11 @@ class CkEditorSubContext extends DrupalSubContextBase {
    * @Then CKEditor :id should match :expression
    */
   public function assertEditorMatch($expression, $id = NULL) {
-    $id = $id ?: $this->getDefaultEditorId();
+    $content = $this->getContents($id ?: $this->getDefaultEditorId());
 
-    if (preg_match($expression, $this->getContent($id)) == 0) {
+    if (preg_match($expression, $content) == 0) {
       throw new \Exception("CKEditor $id did not match '$expression'.");
     }
-  }
-
-  /**
-   * Gets the content of a CKEditor instance.
-   *
-   * @param string $id
-   *   The editor instance ID.
-   *
-   * @return string
-   *   The HTML content of the editor.
-   */
-  protected function getContent($id) {
-    return $this->getSession()
-      ->evaluateScript("CKEDITOR.instances['$id'].getData();");
   }
 
   /**
@@ -124,11 +112,7 @@ class CkEditorSubContext extends DrupalSubContextBase {
    * @When I execute the :command command in CKEditor :id
    */
   public function execute($command, $id = NULL, $data = NULL) {
-    $id = $id ?: $this->getDefaultEditorId();
-
-    $data = json_encode($data);
-    $this->getSession()
-      ->evaluateScript("CKEDITOR.instances['$id'].execCommand('$command', $data);");
+    $this->doExecute($id ?: $this->getDefaultEditorId(), $command, $data);
   }
 
   /**
@@ -140,19 +124,6 @@ class CkEditorSubContext extends DrupalSubContextBase {
   protected function getDefaultEditorId() {
     $instances = $this->getInstances();
     return reset($instances);
-  }
-
-  /**
-   * Returns a list of all CKEditor instance IDs.
-   *
-   * @return string[]
-   *   The CKEditor instance IDs.
-   */
-  protected function getInstances() {
-    $instances = $this->getSession()
-      ->evaluateScript('Object.keys(CKEDITOR.instances).join(",")');
-
-    return explode(',', $instances);
   }
 
 }
