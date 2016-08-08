@@ -133,6 +133,7 @@ projects[workbench_moderation][download][type] = git
 projects[workbench_moderation][download][url] = https://git.drupal.org/project/workbench_moderation
 projects[workbench_moderation][download][tag] = 8.x-1.1
 projects[workbench_moderation][patch][] = https://www.drupal.org/files/issues/2668006-2.patch
+projects[workbench_moderation][patch][] = https://www.drupal.org/files/issues/workbench_moderation-invalid_service_definition.patch
 projects[workspace][type] = module
 projects[workspace][download][type] = git
 projects[workspace][download][url] = https://github.com/josephdpurcell/drupal-workspace.git

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "04676555c553ffdbecae3d639ab20e09",
-    "content-hash": "3e77b372fee543aa54f0ba0e493bd8bf",
+    "hash": "2d1bf831966b32b42de619dc4ce06b7f",
+    "content-hash": "cd75945c3c57586d97aa3acc0c78cdb0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1933,7 +1933,8 @@
                     "dev-8.x-1.x": "8.1.x-dev"
                 },
                 "patches_applied": {
-                    "2668006 - Provide logical access control for when IPE should be applied to moderated nodes": "https://www.drupal.org/files/issues/2668006-2.patch"
+                    "2668006 - Provide logical access control for when IPE should be applied to moderated nodes": "https://www.drupal.org/files/issues/2668006-2.patch",
+                    "2780691 - Incorrect EntityRevision paramconverter service definition causes a fatal error": "https://www.drupal.org/files/issues/workbench_moderation-invalid_service_definition.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
