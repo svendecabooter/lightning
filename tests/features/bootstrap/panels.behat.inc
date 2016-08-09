@@ -139,40 +139,4 @@ class PanelsSubContext extends DrupalSubContextBase {
     $this->assertSession()->elementExists('css', $selector);
   }
 
-  /**
-   * Customizes a node view mode.
-   *
-   * @param string $view_mode
-   *   The view mode ID.
-   * @param string $node_type
-   *   The node type ID.
-   *
-   * @When I customize the :view_mode view mode of the :node_type content type
-   *
-   * @Given I have customized the :view_mode view mode of the :node_type content type
-   */
-  public function customizeViewMode($view_mode, $node_type) {
-    $this->minkContext->visit('/admin/structure/types/manage/' . $node_type . '/display');
-    $this->minkContext->assertCheckBox('display_modes_custom[' . $view_mode . ']');
-    $this->minkContext->pressButton('Save');
-  }
-
-  /**
-   * Uncustomizes a node view mode.
-   *
-   * @param string $view_mode
-   *   The view mode ID.
-   * @param string $node_type
-   *   The node type ID.
-   *
-   * @When I uncustomize the :view_mode view mode of the :node_type content type
-   *
-   * @Given I have uncustomized the :view_mode view mode of the :node_type content type
-   */
-  public function uncustomizeViewMode($view_mode, $node_type) {
-    $this->minkContext->visit('/admin/structure/types/manage/' . $node_type . '/display');
-    $this->minkContext->assertUncheckBox('display_modes_custom[' . $view_mode . ']');
-    $this->minkContext->pressButton('Save');
-  }
-
 }
