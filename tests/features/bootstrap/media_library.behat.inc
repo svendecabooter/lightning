@@ -6,6 +6,7 @@
  */
 
 use Acquia\LightningExtension\Context\AwaitContext;
+use Acquia\LightningExtension\Context\CkEditorContext;
 use Acquia\LightningExtension\Context\EntityBrowserFrameContext;
 use Acquia\LightningExtension\ElementManipulationTrait;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
@@ -51,7 +52,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
    * @When I open the media browser
    */
   public function openMediaBrowser($button = 'media_browser') {
-    $this->getContext('\CkEditorSubContext')
+    $this->getContext(CkEditorContext::class)
       ->execute('editdrupalentity', NULL, ['id' => $button]);
 
     $this->minkContext->iWaitForAjaxToFinish();
