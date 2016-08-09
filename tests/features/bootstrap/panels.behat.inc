@@ -6,8 +6,6 @@
  */
 
 use Acquia\LightningExtension\ElementManipulationTrait;
-use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\ExpectationException;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\MinkContext;
 
@@ -94,121 +92,6 @@ class PanelsSubContext extends DrupalSubContextBase {
 
     $this->clickSelector('[value = "Add"]');
     $this->minkContext->iWaitForAjaxToFinish();
-  }
-
-  /**
-   * Places a block into a panelizer layout via Wizard.
-   *
-   * @param string $label
-   *   The text name of the block.
-   * @param string $region
-   *   The name of the region in which to place the block.
-   *
-   * @When I place the :label block into the :region panelizer region
-   */
-  public function placePanelizerBlock($label, $region) {
-    $this->minkContext->clickLink('Add new block');
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->minkContext->clickLink($label);
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->minkContext->selectOption('region', $region);
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->minkContext->pressButton('Add block');
-    $this->minkContext->iWaitForAjaxToFinish();
-
-    $this->assertPanelizerBlock($label, $region);
-  }
-
-  /**
-   * Asserts that a block is present in a specific region of a Panelizer layout.
-   *
-   * @param string $label
-   *   The block label.
-   * @param string $region
-   *   The machine name of the region in which the block is expected to be.
-   *
-   * @return \Behat\Mink\Element\NodeElement
-   *   The block's row in the table.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   If the block is not present as expected.
-   *
-   * @Then the :label block should be in the :region region
-   */
-  public function assertPanelizerBlock($label, $region) {
-    $row = $this->getBlockRow($label, $region);
-    if ($row) {
-      return $row;
-    }
-    else {
-      throw new ExpectationException("Expected block '{$label}' to be present in '{$region}' region.", $this->getSession()->getDriver());
-    }
-  }
-
-  /**
-   * Removes a block from the panelizer layout via the Wizard.
-   *
-   * Assumes that exactly one block with the given name exists in the given
-   * region.
-   *
-   * @param string $label
-   *   The label of the block to remove.
-   * @param string $region
-   *   The machine name of the region in which the block is currently placed.
-   *
-   * @When I remove the :label block from the :region panelizer region
-   */
-  public function removePanelizerBlock($label, $region) {
-    $row = $this->assertPanelizerBlock($label, $region);
-
-    $drop_button = $row->find('css', 'ul.dropbutton');
-    $drop_button->find('css', 'li.dropbutton-toggle')->click();
-    $drop_button->findLink('Delete')->click();
-  }
-
-  /**
-   * Returns the table row for a specific block in a specific region.
-   *
-   * @param string $block_label
-   *   The label of the block to locate.
-   * @param string $region
-   *   The machine name of the region in which the block is expected to be.
-   *
-   * @return \Behat\Mink\Element\NodeElement|null
-   *   The row element, or null if one was not found.
-   */
-  protected function getBlockRow($block_label, $region) {
-    $page = $this->getSession()->getPage();
-
-    // array_map() callback. Traverses from a region select list to the table
-    // row that contains it.
-    $row_map = function (NodeElement $select) {
-      return $select
-        // The containing DIV.
-        ->getParent()
-        // The table cell.
-        ->getParent()
-        // The table row.
-        ->getParent();
-    };
-
-    $elements = $page->findAll('css', 'table#blocks tr > td > div > select.block-region-select');
-    $elements = array_filter($elements, function (NodeElement $element) use ($region) {
-      return $element->getValue() == $region;
-    });
-
-    /** @var NodeElement $row */
-    foreach (array_map($row_map, $elements) as $row) {
-      // The first cell is the one with the label; find() will return the first
-      // matched element, which should be the first cell.
-      $row_label = $row->find('css', 'td')->getText();
-      if (trim($row_label) == $block_label) {
-        return $row;
-      }
-    }
   }
 
   /**
