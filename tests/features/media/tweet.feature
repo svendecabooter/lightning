@@ -15,10 +15,9 @@ Feature: Twitter media assets
     And I queue the latest media entity for deletion
 
   Scenario: Viewing a tweet as an anonymous user
-    Given tweet media from embed code:
-    """
-    https://twitter.com/webchick/status/672110599497617408
-    """
-    And I am an anonymous user
+    Given I am an anonymous user
+    And media entities:
+      | bundle | name            | embed_code                                             | status | uid |
+      | tweet  | webchick speaks | https://twitter.com/webchick/status/672110599497617408 | 1      | 1   |
     When I visit a media entity of type tweet
     Then I should get a 200 HTTP response

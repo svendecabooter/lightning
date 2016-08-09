@@ -2,6 +2,7 @@
 
 namespace Acquia\LightningExtension\Context;
 
+use Acquia\LightningExtension\AwaitTrait;
 use Acquia\LightningExtension\EntityBrowserContextInterface;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 
@@ -10,21 +11,7 @@ use Drupal\DrupalExtension\Context\DrupalSubContextBase;
  */
 class EntityBrowserFrameContext extends DrupalSubContextBase implements EntityBrowserContextInterface {
 
-  /**
-   * The Await context.
-   *
-   * @var AwaitContext
-   */
-  protected $await;
-
-  /**
-   * Pre-scenario hook.
-   *
-   * @BeforeScenario
-   */
-  public function gatherContexts() {
-    $this->await = $this->getContext(AwaitContext::class);
-  }
+  use AwaitTrait;
 
   /**
    * Returns the CSS selector for an entity browser iFrame.
@@ -62,7 +49,7 @@ class EntityBrowserFrameContext extends DrupalSubContextBase implements EntityBr
     // Wait for the iFrame element to exist, so that any initialization scripts
     // have a chance to run.
     $selector = $this->getSelector($id);
-    $this->await->awaitElement($selector);
+    $this->awaitElement($selector);
 
     return $this->assertSession()
       ->elementExists('css', $selector)
@@ -78,7 +65,7 @@ class EntityBrowserFrameContext extends DrupalSubContextBase implements EntityBr
   public function enter($id = NULL) {
     $frame = $this->getFrame($id);
     $this->getSession()->switchToIFrame($frame);
-    $this->await->awaitElement('form.entity-browser-form');
+    $this->awaitElement('form.entity-browser-form');
   }
 
   /**
@@ -103,7 +90,7 @@ class EntityBrowserFrameContext extends DrupalSubContextBase implements EntityBr
     // first so that we can assert its disappearance.
     $frame = $this->getFrame($id);
     $this->submit($id);
-    $this->await->awaitExpression('typeof window.frames["' . $frame . '"] === "undefined"');
+    $this->awaitExpression('typeof window.frames["' . $frame . '"] === "undefined"');
   }
 
 }

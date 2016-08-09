@@ -5,7 +5,7 @@
  * Contains \MediaLibrarySubContext.
  */
 
-use Acquia\LightningExtension\Context\AwaitContext;
+use Acquia\LightningExtension\AwaitTrait;
 use Acquia\LightningExtension\Context\CkEditorContext;
 use Acquia\LightningExtension\Context\EntityBrowserFrameContext;
 use Acquia\LightningExtension\ElementManipulationTrait;
@@ -17,14 +17,8 @@ use Drupal\DrupalExtension\Context\MinkContext;
  */
 class MediaLibrarySubContext extends DrupalSubContextBase {
 
+  use AwaitTrait;
   use ElementManipulationTrait;
-
-  /**
-   * The Await context.
-   *
-   * @var AwaitContext
-   */
-  protected $await;
 
   /**
    * The Mink context.
@@ -39,7 +33,6 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
    * @BeforeScenario
    */
   public function gatherContexts() {
-    $this->await = $this->getContext(AwaitContext::class);
     $this->minkContext = $this->getContext(MinkContext::class);
   }
 
@@ -84,7 +77,7 @@ class MediaLibrarySubContext extends DrupalSubContextBase {
     $this->getContext(EntityBrowserFrameContext::class)->complete();
 
     $this->minkContext->iWaitForAjaxToFinish();
-    $this->await->awaitElement('form.entity-embed-dialog');
+    $this->awaitElement('form.entity-embed-dialog');
     $session->executeScript('document.querySelector("form.entity-embed-dialog").elements.op[1].click()');
     $this->minkContext->iWaitForAjaxToFinish();
   }

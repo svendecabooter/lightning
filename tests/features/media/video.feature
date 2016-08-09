@@ -27,10 +27,9 @@ Feature: Video media assets
     And I queue the latest media entity for deletion
 
   Scenario: Viewing a video as an anonymous user
-    Given video from embed code:
-    """
-    https://www.youtube.com/watch?v=ktCgVopf7D0
-    """
-    And I am an anonymous user
+    Given I am an anonymous user
+    And media entities:
+      | bundle | name           | field_media_video_embed_field               | status | uid |
+      | video  | Drupal 8 Intro | https://www.youtube.com/watch?v=ktCgVopf7D0 | 1      | 1   |
     When I visit a media entity of type video
     Then I should get a 200 HTTP response
