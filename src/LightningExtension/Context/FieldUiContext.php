@@ -3,7 +3,6 @@
 namespace Acquia\LightningExtension\Context;
 
 use Acquia\LightningExtension\DrupalApiTrait;
-use Acquia\LightningExtension\UndoTrait;
 use Drupal\Core\Url;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\MinkContext;
@@ -14,7 +13,6 @@ use Drupal\DrupalExtension\Context\MinkContext;
 class FieldUiContext extends DrupalSubContextBase {
 
   use DrupalApiTrait;
-  use UndoTrait;
 
   /**
    * The Mink context.
@@ -33,15 +31,6 @@ class FieldUiContext extends DrupalSubContextBase {
   }
 
   /**
-   * Post-scenario hook.
-   *
-   * @AfterScenario
-   */
-  public function clean() {
-    $this->undoAll();
-  }
-
-  /**
    * Customizes a view mode.
    *
    * @param string $entity_type
@@ -50,23 +39,17 @@ class FieldUiContext extends DrupalSubContextBase {
    *   The view mode ID.
    * @param string $bundle
    *   (optional) The bundle to customize.
-   * @param bool $undo
-   *   (optional) Whether to automatically undo this operation post-scenario.
    *
    * @Given I have customized the :view_mode view mode of the :bundle :entity_type type
+   * @Given I have customized the :view_mode view mode of the :entity_type entity type
    *
    * @When I customize the :view_mode view mode of the :bundle :entity_type type
+   * @When I customize the :view_mode view mode of the :entity_type entity type
    */
-  public function customize($entity_type, $view_mode, $bundle = NULL, $undo = TRUE) {
+  public function customize($entity_type, $view_mode, $bundle = NULL) {
     $this->manageDisplay($entity_type, $bundle);
     $this->minkContext->checkOption('display_modes_custom[' . $view_mode . ']');
     $this->minkContext->pressButton('Save');
-
-    if ($undo) {
-      $arguments = func_get_args();
-      $arguments[3] = FALSE;
-      $this->undo([$this, 'uncustomize'], $arguments);
-    }
   }
 
   /**
@@ -78,23 +61,17 @@ class FieldUiContext extends DrupalSubContextBase {
    *   The view mode ID.
    * @param string $bundle
    *   (optional) The bundle to uncustomize.
-   * @param bool $undo
-   *   (optional) Whether to automatically undo this operation post-scenario.
    *
    * @Given I have uncustomized the :view_mode view mode of the :bundle :entity_type type
+   * @Given I have uncustomized the :view_mode view mode of the :entity_type entity type
    *
    * @When I uncustomize the :view_mode view mode of the :bundle :entity_type type
+   * @When I uncustomize the :view_mode view of the :entity_type entity type
    */
-  public function uncustomize($entity_type, $view_mode, $bundle = NULL, $undo = TRUE) {
+  public function uncustomize($entity_type, $view_mode, $bundle = NULL) {
     $this->manageDisplay($entity_type, $bundle);
     $this->minkContext->uncheckOption('display_modes_custom[' . $view_mode . ']');
     $this->minkContext->pressButton('Save');
-
-    if ($undo) {
-      $arguments = func_get_args();
-      $arguments[3] = FALSE;
-      $this->undo([$this, 'customize'], $arguments);
-    }
   }
 
   /**

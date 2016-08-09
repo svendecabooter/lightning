@@ -32,6 +32,7 @@ Feature: Panelizer Wizard
     And I visit "/node/add/landing_page"
     Then I should see a "Full content" field
     And I should see a "Search result highlighting input" field
+    And I uncustomize the search_result view mode of the landing_page node type
     And I visit "/node/add/landing_page"
     # TODO: There's no way to assert that the *field* doesn't exist!
     And I should not see "Search result highlighting input"
