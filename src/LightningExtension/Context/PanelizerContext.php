@@ -3,6 +3,7 @@
 namespace Acquia\LightningExtension\Context;
 
 use Acquia\LightningExtension\ElementManipulationTrait;
+use Acquia\LightningExtension\FieldUiTrait;
 use Acquia\LightningExtension\TableTrait;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
@@ -16,6 +17,7 @@ use Drupal\DrupalExtension\Context\MinkContext;
 class PanelizerContext extends DrupalSubContextBase {
 
   use ElementManipulationTrait;
+  use FieldUiTrait;
   use TableTrait;
 
   /**
@@ -163,6 +165,42 @@ class PanelizerContext extends DrupalSubContextBase {
 
     $this->clickSelector('a.panelizer-ipe-save-' . $type);
     $this->minkContext->iWaitForAjaxToFinish();
+  }
+
+  /**
+   * Applies Panelizer to a view of mode of an entity type and bundle.
+   *
+   * @param string $bundle
+   *   The node type ID.
+   *
+   * @Given I have panelized the :view_mode view mode of the :bundle :entity_type type
+   *
+   * @When I panelize the :view_mode view mode of the :bundle :entity_type type
+   */
+  public function panelize($entity_type, $view_mode, $bundle = NULL) {
+    $this->manageDisplay($entity_type, $bundle);
+    $this->minkContext->clickLink($view_mode);
+    $this->minkContext->checkOption('panelizer[enable]');
+    $this->minkContext->checkOption('panelizer[custom]');
+    $this->minkContext->pressButton('Save');
+  }
+
+  /**
+   * Removes Panelizer from a node type.
+   *
+   * @param string $bundle
+   *   The node type ID.
+   *
+   * @Given I have unpanelized the :view_mode view of the :bundle :entity_type type
+   *
+   * @When I unpanelize the :view_mode view mode of the :bundle :entity_type type
+   */
+  public function unpanelize($entity_type, $view_mode, $bundle = NULL) {
+    $this->manageDisplay($entity_type, $bundle);
+    $this->minkContext->clickLink($view_mode);
+    $this->minkContext->uncheckOption('panelizer[enable]');
+    $this->minkContext->uncheckOption('panelizer[custom]');
+    $this->minkContext->pressButton('Save');
   }
 
 }
