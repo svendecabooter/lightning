@@ -2,6 +2,7 @@
 
 namespace Acquia\LightningExtension\Context;
 
+use Acquia\LightningExtension\BlockManipulationInterface;
 use Acquia\LightningExtension\ElementManipulationTrait;
 use Acquia\LightningExtension\FieldUiTrait;
 use Acquia\LightningExtension\TableTrait;
@@ -14,7 +15,7 @@ use Drupal\DrupalExtension\Context\MinkContext;
 /**
  * Contains steps for interacting with Panelizer and panelized layouts.
  */
-class PanelizerContext extends DrupalSubContextBase {
+class PanelizerContext extends DrupalSubContextBase implements BlockManipulationInterface {
 
   use ElementManipulationTrait;
   use FieldUiTrait;
@@ -37,12 +38,7 @@ class PanelizerContext extends DrupalSubContextBase {
   }
 
   /**
-   * Places a block into a panelizer layout via Wizard.
-   *
-   * @param string $label
-   *   The text name of the block.
-   * @param string $region
-   *   The name of the region in which to place the block.
+   * {@inheritdoc}
    *
    * @When I place the :label block into the :region panelizer region
    */
@@ -63,15 +59,7 @@ class PanelizerContext extends DrupalSubContextBase {
   }
 
   /**
-   * Removes a block from the panelizer layout via the Wizard.
-   *
-   * Assumes that exactly one block with the given name exists in the given
-   * region.
-   *
-   * @param string $label
-   *   The label of the block to remove.
-   * @param string $region
-   *   The machine name of the region in which the block is currently placed.
+   * {@inheritdoc}
    *
    * @When I remove the :label block from the :region panelizer region
    */
