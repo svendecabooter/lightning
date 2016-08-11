@@ -6,7 +6,6 @@
  */
 
 use Acquia\LightningExtension\ElementManipulationTrait;
-use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 
@@ -67,85 +66,6 @@ class LightningSubContext extends DrupalSubContextBase {
   }
 
   /**
-   * Asserts that a role as a set of permissions.
-   *
-   * @param string $rid
-   *   The role ID.
-   * @param \Behat\Gherkin\Node\PyStringNode $permissions
-   *   The permissions to check for.
-   *
-   * @Then the :role role should have permissions:
-   * @Then the :role role should have permission to:
-   */
-  public function assertPermissions($rid, PyStringNode $permissions) {
-    foreach ($permissions->getStrings() as $permission) {
-      $this->assertPermission($rid, $permission);
-    }
-  }
-
-  /**
-   * Asserts that a role does NOT have a set of permissions.
-   *
-   * @param string $rid
-   *   The role ID.
-   * @param \Behat\Gherkin\Node\PyStringNode $permissions
-   *   The permissions to check for.
-   *
-   * @Then the :role role should not have permissions:
-   * @Then the :role role should not have permission to:
-   */
-  public function assertNoPermissions($rid, PyStringNode $permissions) {
-    foreach ($permissions->getStrings() as $permission) {
-      $this->assertNoPermission($rid, $permission);
-    }
-  }
-
-  /**
-   * Asserts that a role has a specific permission.
-   *
-   * @param string $rid
-   *   The role ID.
-   * @param string $permission
-   *   The permission to check for.
-   *
-   * @Given the :role role has the :permission permission
-   * @Given the :role role has permission to :permission
-   *
-   * @Then the :role role should have the :permission permission
-   * @Then the :role role should have permission to :permission
-   */
-  public function assertPermission($rid, $permission) {
-    $this->minkContext->assertAtPath('/admin/people/permissions/' . $rid);
-    $this->assertSession()->checkboxChecked($rid . '[' . $permission . ']');
-  }
-
-  /**
-   * Asserts that a role does not have a specific permission.
-   *
-   * @param string $rid
-   *   The role ID.
-   * @param string $permission
-   *   The permission to check for.
-   *
-   * @Given the :role role does not have the :permission permission
-   * @Given the :role role does not have permission to :permission
-   *
-   * @Then the :role role should not have the :permission permission
-   * @Then the :role role should not have permission to :permission
-   */
-  public function assertNoPermission($rid, $permission) {
-    $this->minkContext->assertAtPath('/admin/people/permissions/' . $rid);
-
-    $field = $rid . '[' . $permission . ']';
-    try {
-      $this->assertSession()->fieldNotExists($field);
-    }
-    catch (ExpectationException $e) {
-      $this->assertSession()->checkboxNotChecked($field);
-    }
-  }
-
-  /**
    * Scrolls an element into the viewport.
    *
    * @param string $selector
@@ -155,20 +75,6 @@ class LightningSubContext extends DrupalSubContextBase {
    */
   public function scrollToElement($selector) {
     $this->scrollTo($selector);
-  }
-
-  /**
-   * Expands a drop button.
-   *
-   * @param string $selector
-   *   The data-drupal-selector attribute of the drop button.
-   *
-   * @When I expand the :selector drop button
-   */
-  public function expandDropButton($selector) {
-    $selector = 'ul.dropbutton[data-drupal-selector="' . $selector . '"]';
-    $this->clickElementBySelector($selector . ' li.dropbutton-toggle');
-    $this->scrollToElement($selector);
   }
 
   /**

@@ -12,7 +12,7 @@ Feature: Responsibility-based user roles for creating and managing media assets
   Scenario: Content creators have access to the rich_text input format and entity browsers
     Given I am logged in as a user with the "administer permissions" permission
     When I visit "/admin/people/permissions"
-    Then the page_creator role should have permission to:
+    Then the page_creator role should have permissions:
       """
       use text format rich_text
       access media_browser entity browser pages

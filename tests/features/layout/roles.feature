@@ -12,7 +12,7 @@ Feature: Responsibility-based user roles for editing and managing layouts
   Scenario: Layout managers have permission to administer Panelizer defaults
     Given I am logged in as a user with the "administer permissions" permission
     When I visit "/admin/people/permissions"
-    Then the layout_manager role should have permission to:
+    Then the layout_manager role should have permissions:
       """
       administer panelizer node page defaults
       administer panelizer node landing_page defaults
@@ -25,7 +25,7 @@ Feature: Responsibility-based user roles for editing and managing layouts
       | type | name |
       | foo  | foo  |
     When I visit "/admin/people/permissions"
-    Then the layout_manager role should have permission to "administer panelizer node foo defaults"
+    Then the layout_manager role should have the "administer panelizer node foo defaults" permission
 
   @beta5
   Scenario: Layout managers lose permission to administer Panelizer defaults for deleted node types
@@ -36,4 +36,4 @@ Feature: Responsibility-based user roles for editing and managing layouts
     When I visit "/admin/structure/types/manage/foo/delete"
     And I press "Delete"
     And I visit "/admin/people/permissions"
-    Then the layout_manager role should not have permission to "administer panelizer node foo defaults"
+    Then the layout_manager role should not have the "administer panelizer node foo defaults" permission

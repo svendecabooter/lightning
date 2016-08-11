@@ -29,22 +29,6 @@ class EntitySubContext extends DrupalSubContextBase {
   protected $entities = [];
 
   /**
-   * The Mink context.
-   *
-   * @var \Drupal\DrupalExtension\Context\MinkContext
-   */
-  protected $minkContext;
-
-  /**
-   * Pre-scenario hook.
-   *
-   * @BeforeScenario
-   */
-  public function gatherContexts() {
-    $this->minkContext = $this->getContext('\Drupal\DrupalExtension\Context\MinkContext');
-  }
-
-  /**
    * Creates a set of entities of a given type.
    *
    * @param string $entity_type

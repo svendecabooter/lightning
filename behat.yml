@@ -12,6 +12,7 @@ default:
         - Acquia\LightningExtension\Context\NodeContext
         - Acquia\LightningExtension\Context\PanelizerContext
         - Acquia\LightningExtension\Context\PanelsInPlaceContext
+        - Acquia\LightningExtension\Context\PermissionContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
