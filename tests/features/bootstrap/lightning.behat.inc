@@ -29,8 +29,14 @@ class LightningSubContext extends DrupalSubContextBase {
    *
    * @BeforeScenario
    */
-  public function gatherContexts() {
+  public function preScenario() {
     $this->minkContext = $this->getContext('Drupal\DrupalExtension\Context\MinkContext');
+
+    // Set the absolute path to the uploadable files directory, if it exists.
+    $dir = __DIR__ . '/../../files';
+    if (is_dir($dir)) {
+      $this->minkContext->setMinkParameter('files_path', $dir);
+    }
   }
 
   /**
@@ -223,15 +229,6 @@ class LightningSubContext extends DrupalSubContextBase {
    */
   public function assertFieldExists($locator) {
     $this->assertSession()->fieldExists($locator);
-  }
-
-  /**
-   * Sets the absolute path to the directory containing uploadable files.
-   *
-   * @BeforeScenario
-   */
-  public function setFilePath() {
-    $this->minkContext->setMinkParameter('files_path', __DIR__ . '/../../files');
   }
 
   /**

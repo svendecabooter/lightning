@@ -8,26 +8,25 @@ namespace Acquia\LightningExtension;
 interface BlockManipulationInterface {
 
   /**
-   * Places a block into a layout.
+   * Places a block into a layout region.
    *
-   * @param string $label
-   *   The text name of the block.
+   * @param string $identifier
+   *   An identifier for the block to place. The meaning of this value varies
+   *   according to the implementing class.
    * @param string $region
-   *   The name of the region in which to place the block.
+   *   The region in which to place the block.
    */
-  public function placeBlock($label, $region);
+  public function placeBlock($identifier, $region);
 
   /**
-   * Removes a block from a layout.
+   * Removes a block from a layout region.
    *
-   * Assumes that exactly one block with the given name exists in the given
-   * region.
-   *
-   * @param string $label
-   *   The label of the block to remove.
+   * @param string $identifier
+   *   An identifier for the block to remove. The meaning of this value varies
+   *   according to the implementing class.
    * @param string $region
-   *   The machine name of the region in which the block is currently placed.
+   *   The region from which to remove the block.
    */
-  public function removeBlock($label, $region);
+  public function removeBlock($identifier, $region);
 
 }

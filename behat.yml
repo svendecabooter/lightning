@@ -11,6 +11,7 @@ default:
         - Acquia\LightningExtension\Context\FieldUiContext
         - Acquia\LightningExtension\Context\NodeContext
         - Acquia\LightningExtension\Context\PanelizerContext
+        - Acquia\LightningExtension\Context\PanelsInPlaceContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
