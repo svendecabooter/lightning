@@ -166,7 +166,7 @@ class PanelizerContext extends DrupalSubContextBase implements BlockManipulation
    * @When I panelize the :view_mode view mode of the :bundle :entity_type type
    */
   public function panelize($entity_type, $view_mode, $bundle = NULL) {
-    $this->manageDisplay($entity_type, $bundle);
+    $this->fieldUi($entity_type, $bundle, 'Manage display');
     $this->minkContext->clickLink($view_mode);
     $this->minkContext->checkOption('panelizer[enable]');
     $this->minkContext->checkOption('panelizer[custom]');
@@ -184,7 +184,7 @@ class PanelizerContext extends DrupalSubContextBase implements BlockManipulation
    * @When I unpanelize the :view_mode view mode of the :bundle :entity_type type
    */
   public function unpanelize($entity_type, $view_mode, $bundle = NULL) {
-    $this->manageDisplay($entity_type, $bundle);
+    $this->fieldUi($entity_type, $bundle, 'Manage display');
     $this->minkContext->clickLink($view_mode);
     $this->minkContext->uncheckOption('panelizer[enable]');
     $this->minkContext->uncheckOption('panelizer[custom]');

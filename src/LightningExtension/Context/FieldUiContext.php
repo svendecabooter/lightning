@@ -3,8 +3,11 @@
 namespace Acquia\LightningExtension\Context;
 
 use Acquia\LightningExtension\FieldUiTrait;
+use Acquia\LightningExtension\PrivilegeTrait;
+use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\MinkContext;
+use Zumba\Mink\Driver\PhantomJSDriver;
 
 /**
  * Contains steps for interacting with the Field UI.
@@ -12,6 +15,16 @@ use Drupal\DrupalExtension\Context\MinkContext;
 class FieldUiContext extends DrupalSubContextBase {
 
   use FieldUiTrait;
+  use PrivilegeTrait;
+
+  /**
+   * Entity IDs of fields created during the scenario.
+   *
+   * @see ::createField
+   *
+   * @var string[]
+   */
+  protected $fields = [];
 
   /**
    * The Mink context.
@@ -27,6 +40,24 @@ class FieldUiContext extends DrupalSubContextBase {
    */
   public function gatherContexts() {
     $this->minkContext = $this->getContext(MinkContext::class);
+  }
+
+  /**
+   * Post-scenario hook.
+   *
+   * @AfterScenario
+   */
+  public function cleanFields() {
+    $this->assertDrupalApi();
+
+    while ($this->fields) {
+      $id = array_pop($this->fields);
+
+      \Drupal::entityTypeManager()
+        ->getStorage('field_config')
+        ->load($id)
+        ->delete();
+    }
   }
 
   /**
@@ -46,7 +77,7 @@ class FieldUiContext extends DrupalSubContextBase {
    * @When I customize the :view_mode view mode of the :entity_type entity type
    */
   public function customize($entity_type, $view_mode, $bundle = NULL) {
-    $this->manageDisplay($entity_type, $bundle);
+    $this->fieldUi($entity_type, $bundle, 'Manage display');
     $this->minkContext->checkOption($view_mode);
     $this->minkContext->pressButton('Save');
   }
@@ -68,9 +99,56 @@ class FieldUiContext extends DrupalSubContextBase {
    * @When I uncustomize the :view_mode view of the :entity_type entity type
    */
   public function uncustomize($entity_type, $view_mode, $bundle = NULL) {
-    $this->manageDisplay($entity_type, $bundle);
+    $this->fieldUi($entity_type, $bundle, 'Manage display');
     $this->minkContext->uncheckOption($view_mode);
     $this->minkContext->pressButton('Save');
+  }
+
+  /**
+   * Creates a configurable field via the UI.
+   *
+   * @param string $entity_type
+   *   The target entity type ID.
+   * @param string $bundle
+   *   The target bundle.
+   * @param string $field_type
+   *   The type of field to create.
+   * @param string $machine_name
+   *   The machine name of the field, without the field_ prefix. Will also be
+   *   used as the label of the field.
+   *
+   * @Given a(n) :field_type field called :machine_name on the :bundle :entity_type type
+   *
+   * @When I create a(n) :field_type field called :machine_name on the :bundle :entity_type type
+   */
+  public function createField($entity_type, $bundle, $field_type, $machine_name) {
+    $this->acquireRoles(['administrator']);
+
+    $this->fieldUi($entity_type, $bundle, 'Manage fields');
+    $this->minkContext->clickLink('Add field');
+    $this->minkContext->selectOption('new_storage_type', $field_type);
+    $this->minkContext->fillField('label', $machine_name);
+
+    // If we're using a JavaScript driver, the field name will be filled in
+    // automatically after a short delay. Otherwise, we'll have to set it
+    // directly ourselves.
+    $driver = $this->getSession()->getDriver();
+    if ($driver instanceof Selenium2Driver || $driver instanceof PhantomJSDriver) {
+      // Wait for the JavaScript to generate the field name.
+      sleep(1);
+    }
+    else {
+      $this->minkContext->fillField('field_name', $machine_name);
+    }
+
+    $this->minkContext->pressButton('Save and continue');
+    $this->minkContext->pressButton('Save field settings');
+    $this->minkContext->pressButton('Save settings');
+
+    // Remember the field_config entity ID so we can delete it post-scenario.
+    $this->fields[] = $entity_type . '.' . $bundle . '.field_' . $machine_name;
+
+    $this->releasePrivileges();
   }
 
 }

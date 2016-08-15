@@ -12,22 +12,27 @@ trait FieldUiTrait {
   use DrupalApiTrait;
 
   /**
-   * Visits the Manage Display page for an entity type and bundle.
+   * Visits the main Field UI page for an entity type and bundle.
    *
    * @param string $entity_type
    *   The entity type ID.
    * @param string $bundle
    *   (optional) The bundle ID.
+   * @param string $task
+   *   (optional) The task to perform (i.e., the link to click).
    *
    * @throws \LogicException
    *   If the entity type is not exposed to Field UI.
    */
-  protected function manageDisplay($entity_type, $bundle = NULL) {
+  protected function fieldUi($entity_type, $bundle = NULL, $task = NULL) {
     $path = $this->getFieldUiPath($entity_type, $bundle);
 
     if ($path) {
       $this->visitPath($path);
-      $this->getSession()->getPage()->clickLink('Manage display');
+
+      if ($task) {
+        $this->getSession()->getPage()->clickLink($task);
+      }
     }
     else {
       $value = $entity_type;
