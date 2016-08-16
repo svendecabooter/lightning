@@ -1,3 +1,11 @@
+## 1.04
+* Moved the dependency on drupal-scaffold to dev. (GitHub #142)
+* Added @lightning tag to all included Behat tests. (#2771273)
+* Defined the number of items to display by default in the Media Browser views.
+  (#2783149)
+* Added a sanity check before trying to update image settings on non-image media
+  bundles. (#2781395)
+
 ## 1.03
 * Lightning now includes an image browser for uploading images to and
   selecting images from your media library. It is automatically used
@@ -24,7 +32,7 @@
 * Fixed a PHP notice arising from the media asset preview handler. (PR #140)
 
 ## 1.02
-* Updated core to 8.1.7 (Security Release) and all contrib modules to latest 
+* Updated core to 8.1.7 (Security Release) and all contrib modules to latest
   available releases.
 * It's now possible to define which Lightning extensions will be enabled by
   listing them in ```lightning.extend.yml```. (#2765627)
