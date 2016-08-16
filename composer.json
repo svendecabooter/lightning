@@ -108,7 +108,7 @@
     "require": {
         "cweagans/composer-patches": "^1.5.0",
         "composer/installers": "^1.0",
-        "drupal/core": "^8.1.0",
+        "drupal/core": "8.1.x-dev",
         "drupal/embed": "^8.1.0",
         "drupal/entity_embed": "8.1.0-alpha3",
         "drupal/media_entity": "^8.1.0",

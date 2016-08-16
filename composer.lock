@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ebfcc6562f496cba8b83baf91c88e0cc",
-    "content-hash": "6441e41a9478490d579dcea9dbf90041",
+    "hash": "d26c921e8d725309a5ab02265291f063",
+    "content-hash": "a3bf9cfc2a93c2be3a79f24d9e8bd398",
     "packages": [
         {
             "name": "composer/installers",
@@ -693,16 +693,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.1.8",
+            "version": "8.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal-composer/drupal-core.git",
-                "reference": "3f06f574ccc1e18b61ef150780fb1900c2f40abc"
+                "reference": "1f1d4cf1a16d83895c5438cde3c7523c476d677e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal-composer/drupal-core/zipball/3f06f574ccc1e18b61ef150780fb1900c2f40abc",
-                "reference": "3f06f574ccc1e18b61ef150780fb1900c2f40abc",
+                "url": "https://api.github.com/repos/drupal-composer/drupal-core/zipball/1f1d4cf1a16d83895c5438cde3c7523c476d677e",
+                "reference": "1f1d4cf1a16d83895c5438cde3c7523c476d677e",
                 "shasum": ""
             },
             "require": {
@@ -866,7 +866,7 @@
                 "GPL-2.0+"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "time": "2016-08-03 14:09:08"
+            "time": "2016-08-15 22:27:58"
         },
         {
             "name": "drupal/ctools",
@@ -6996,7 +6996,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/core": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
