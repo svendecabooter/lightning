@@ -486,7 +486,7 @@ function lightning_update_8001() {
       ])->save();
     }
     else {
-      lightning_core_create_config('core_config', 'entity_view_display.block_content.basic.default', 'lightning');
+      lightning_core_create_config('entity_view_display', 'block_content.basic.default', 'lightning');
     }
   }
 
