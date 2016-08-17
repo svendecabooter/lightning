@@ -65,30 +65,6 @@
                 "2765137 - hook_install() + drupal_set_message() = message displayed several times when using a distro.":
                 "https://www.drupal.org/files/issues/2765137-2.patch"
             },
-            "drupal/page_manager": {
-                "2747739 - Mega Patch":
-                "https://www.drupal.org/files/issues/page_manager--alpha23-09e79ff--2747739-3.patch"
-            },
-            "drupal/panelizer": {
-                "2747739 - Mega Patch":
-                "https://www.drupal.org/files/issues/panelizer--alpha2-1ddfa61--2747739-5.patch",
-                "2701349 - Generate new UUIDs for displays when switching from default to field storage":
-                "https://www.drupal.org/files/issues/2701349-2.patch",
-                "2700597 - Explicitly set the Panels IPE URL root when saving in Panelizer":
-                "https://www.drupal.org/files/issues/panelizer-ipe-url-root-handling.patch",
-                "2664682 - Implement admin UI for editing Panelizer defaults":
-                "https://www.drupal.org/files/issues/2664682-49.patch"
-            },
-            "drupal/panels": {
-                "2747739 - Mega Patch":
-                "https://www.drupal.org/files/issues/panels--beta4-4c4a3a7--2747739-17--binary.patch",
-                "2667754 - Allow other modules to disable the IPE based on custom logic":
-                "https://www.drupal.org/files/issues/2667754-3.patch",
-                "Bandaid tempstore patch":
-                "https://www.drupal.org/files/issues/bandaid.patch",
-                "2697587 - Wizard API integration":
-                "https://www.drupal.org/files/issues/2697587-48.patch"
-            },
             "drupal/scheduled_updates": {
                 "2674874 - Issue saving Schedule Update Type form":
                 "https://www.drupal.org/files/issues/schedule_updates-save_type-2674874-2.patch"
@@ -116,9 +92,9 @@
         "drupal/media_entity_twitter": "^8.1.2",
         "drupal/media_entity_image": "^8.1.0",
         "drupal/ctools": "8.3.0-alpha26",
-        "drupal/panels": "8.3.0-beta4",
-        "drupal/page_manager": "8.1.0-alpha23",
-        "drupal/panelizer": "8.3.0-alpha2",
+        "drupal/panels": "8.3.x-dev",
+        "drupal/page_manager": "8.1.x-dev",
+        "drupal/panelizer": "8.3.x-dev",
         "drupal/scheduled_updates": "8.1.0-alpha5",
         "drupal/workbench_moderation": "8.1.1",
         "drupal/acquia_connector": "^8.1.1",
